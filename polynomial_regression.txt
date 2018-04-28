@@ -1,0 +1,82 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Mar 10 17:30:09 2018
+@author: Shishir Khandelwal
+"""
+
+# Importing the libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Importing the dataset
+dataset = pd.read_csv('Position_Salaries.csv')
+X = dataset.iloc[ :,[1] ].values
+y = dataset.iloc[ :,[2] ].values
+
+"""
+#encoding to make the data homogenous
+from sklearn.preprocessing import LabelEncoder,OneHotEncoder
+labelencoder = LabelEncoder()
+X[:,3] = labelencoder.fit_transform(X[:,3])
+
+onehotencoder = OneHotEncoder(categorical_features = [3])
+X= onehotencoder.fit_transform(X).toarray()
+
+#avoiding the dummy variable trap
+X = X[:,1:]
+
+"""
+"""
+# Splitting the dataset into the Training set and Test set
+from sklearn.cross_validation import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/3, random_state = 0)
+"""
+# Feature Scaling
+"""
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+"""
+
+#linear regression
+from sklearn.linear_model import LinearRegression
+lin_reg = LinearRegression()
+lin_reg.fit(X,y)
+
+# Predicting the Test set results
+from sklearn.preprocessing import PolynomialFeatures
+poly_reg = PolynomialFeatures(degree = 2)
+X_poly = poly_reg.fit_transform(X)
+lin_reg_2 = LinearRegression()
+lin_reg_2.fit(X_poly,y)
+
+#visualizing the linear regression results
+plt.scatter(X,y,color='red')
+plt.plot(X,lin_reg.predict(X),color='blue')
+plt.title('truth or bluff (linear regression)')
+plt.xlabel('position level')
+plt.ylabel('salary')
+plt.show()
+
+
+#viualizing the polynomial regression results
+plt.scatter(X,y,color='red')
+plt.plot(X,lin_reg_2.predict( poly_reg.fit_transform(X) ),color='blue')
+plt.title('truth or bluff (linear regression)')
+plt.xlabel('position level')
+plt.ylabel('salary')
+plt.show()
+
+#predicting a new result with linear regression
+lin_reg.predict(6.5)
+
+#predicting a new result with polynomial regression
+lin_reg_2.predict(poly_reg.fit_transform(6.5))
+
+
+
+
+
+
